@@ -1,9 +1,26 @@
 ---
-title: "Untitled"
+title: "Parkrun Results"
 output: github_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(rvest)
 ```
 
+
+```{r}
+url_data <- "https://www.parkrun.org.uk/parkrunner/5076650/all/"
+  
+
+```
+
+```{r}
+
+read_html('results | parkrun UK.html') %>%
+  html_nodes(xpath='//*[@id="results"]') %>%
+  html_table() -> Results
+  
+Results[3]
+```

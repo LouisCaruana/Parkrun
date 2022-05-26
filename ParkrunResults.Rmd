@@ -7,12 +7,12 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(rvest)
+library(lubridate)
 ```
 
 
 ```{r}
 url_data <- "https://www.parkrun.org.uk/parkrunner/5076650/all/"
-  
 
 ```
 
@@ -21,6 +21,30 @@ url_data <- "https://www.parkrun.org.uk/parkrunner/5076650/all/"
 read_html('results | parkrun UK.html') %>%
   html_nodes(xpath='//*[@id="results"]') %>%
   html_table() -> Results
-  
-Results[3]
+
+write.csv(Results[3], 'AllResults.csv')
 ```
+ 
+ 
+
+ 
+ 
+```{r}
+read.csv('AllResults.csv') %>%
+  mutate(Run.Date = dmy(Run.Date)) %>%
+  group_by(Event) %>% filter(n() > 4) -> TidyResults
+
+TidyResults
+
+```
+
+```{r fig.height=12}
+TidyResults %>%
+  ggplot(aes(x = Run.Date, y = Time)) + 
+  geom_point() +
+  facet_wrap(~Event, ncol = 1)
+
+```
+
+
+
